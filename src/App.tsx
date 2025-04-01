@@ -15,8 +15,8 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/signup" element={<Signup />} />
 
-              <PrivateRoute path="/teams" exact component={Teams} />
-              <PrivateRoute path="/teams/:id" component={TeamDetails} />
+              {/* <PrivateRoute path="/teams" exact component={Teams} />
+              <PrivateRoute path="/teams/:id" component={TeamDetails} /> */}
             </Routes>
           </Layout>
       </ThemeProvider>
