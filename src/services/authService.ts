@@ -38,9 +38,7 @@ export const resetPassword = async (data: {
 
 export const logout = () => {
     API.post('/api/auth/logout');
-    localStorage.removeItem('user');
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.clear();
 };
 
 export const refreshToken = async (refreshToken: string) => {
@@ -50,7 +48,9 @@ export const refreshToken = async (refreshToken: string) => {
 
 export const getUserDetails = async () => {
     const response = await API.get('/api/auth/user');
-    return response.data;
+    console.log("User data fetched: ", response.data);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    return response.data.user;
 };
 
 export const isAuthenticated = (): boolean => {

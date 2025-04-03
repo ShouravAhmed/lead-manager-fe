@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { logout } from '../services/authService';
 
-//const API = axios.create({ baseURL: 'https://lead-manager-d9jy.onrender.com' });
-const API = axios.create({ baseURL: 'http://localhost:8080' });
+const API = axios.create({ baseURL: 'https://lead-manager-d9jy.onrender.com' });
+// const API = axios.create({ baseURL: 'http://localhost:8080' });
 
 API.interceptors.request.use(async (config) => {
   let token = localStorage.getItem('accessToken');
@@ -16,13 +16,15 @@ API.interceptors.response.use(
     if (error.response.status === 401) {
       const refreshToken = localStorage.getItem('refreshToken');
       try {
-        const res = await axios.post('/api/auth/refresh-token', { refreshToken: refreshToken });
+        const res = await axios.post(`${API.defaults.baseURL}/api/auth/refresh-token`, { refreshToken });
         localStorage.setItem('accessToken', res.data.accessToken);
         error.config.headers.Authorization = `Bearer ${res.data.accessToken}`;
         return axios(error.config);
-      } catch (refreshError) {
+      } 
+      catch (refreshError) {
         logout();
         window.location.href = '/login'; // Redirect to login page
+        console.error('Refresh token error:', refreshError);
         return Promise.reject(refreshError);
       }
     }

@@ -2,11 +2,14 @@ import React, { ReactNode, useState, useEffect } from "react";
 import { FaUser, FaUsers, FaClipboardList, FaPlus, FaPhoneSlash, FaPhone, FaRedo, FaCheck, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+import { User, Team } from "../types";
+import { getUserDetails } from "../services/authService";
+import { getAllTeams } from "../services/teamService";
 
 
 const DashboardLeftColumn = () => {
     const navigate = useNavigate();
-    const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string } | null>(() => {
+    const [selectedTeam, setSelectedTeam] = useState<Team | null>(() => {
         const storedTeam = localStorage.getItem("selectedTeam");
         return storedTeam ? JSON.parse(storedTeam) : null;
     });
@@ -16,12 +19,19 @@ const DashboardLeftColumn = () => {
         return storedItem ? JSON.parse(storedItem) : { name: "My Leads" };
     });
 
-    const demoTeams =
-    [
-        { id: "team-1", name: "Team Alpha" },
-        { id: "team-2", name: "Team Beta" },
-        { id: "team-3", name: "Team Gamma" },
-    ];
+    const [teams, setTeams] = useState<Team[]>([]);
+    useEffect(() => {
+        const storedTeams = localStorage.getItem('teams') ? JSON.parse(localStorage.getItem('teams')!) : null;
+        setTeams(storedTeams);
+        getAllTeams();
+    }, []);
+
+    const [userData, setUserData] = useState<User | null>(null);
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
+        setUserData(storedUser);
+        getUserDetails();
+    }, []);
 
     const demoItems = 
     [
@@ -50,22 +60,25 @@ const DashboardLeftColumn = () => {
     return (
         <aside className="bg-white dark:bg-gray-800 text-grey-400 dark:text-white p-4 sm:w-64 flex-shrink-0 h-screen overflow-y-auto">
             {/* Profile Section */}
-            <div className="flex items-center mb-8 sticky top-0 bg-white dark:bg-gray-800 z-10 p-4">
+            <div className="flex items-center mb-8 sticky top-0 bg-white dark:bg-gray-800 z-10">
                 <img
                     src="https://avatar.iran.liara.run/public"
                     alt="Profile"
                     className="rounded-full w-12 h-12"
                 />
-                <div className="ml-4">
-                    <h2 className="text-lg font-bold">John Doe</h2>
-                    <p className="text-sm text-blue-600 dark:text-blue-300">Sales Manager</p>
+                <div className="ml-4 hidden sm:block">
+                    <h2 className="text-lg font-bold">{userData?.username}</h2>
+                    <p className="text-sm text-blue-600 dark:text-blue-300">{userData?.title}</p>
                 </div>
             </div>
 
             {/* Selected Team Section */}
             {selectedTeam &&
             <nav className="mb-8">
-                <h3 className="text-sm font-semibold text-indigo-600 dark:text-indigo-300 uppercase mb-4">{selectedTeam.name}</h3>
+                <h3 className="text-sm font-semibold text-indigo-600 dark:text-indigo-300 uppercase mb-4">
+                    <span className="sm:hidden">Team</span>
+                    <span className="hidden sm:inline">{selectedTeam.title}</span>
+                </h3>
                 <ul className="space-y-2">
                     {demoItems.map((item) => (
                         <li key={item.name}>
@@ -98,21 +111,19 @@ const DashboardLeftColumn = () => {
                         <span className="hidden sm:inline">Create Team</span>
                     </button>
                     </li>
-                    {
-                    demoTeams.map((team: { id: string; name: string }) => (
-                        <li key={team.id}>
-                        <button
-                            onClick={() => {
-                            setSelectedTeam(team);
-                            }}
-                            className={`flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white ${selectedTeam?.id === team.id ? "bg-indigo-700 text-white" : ""}`}
-                        >
-                            <FaUser className="mr-3" />
-                            <span className="hidden sm:inline">{team.name}</span>
-                        </button>
+                    {teams.map((team, index) => (
+                        <li key={index}>
+                            <button
+                                onClick={() => {
+                                    setSelectedTeam(team);
+                                }}
+                                className={`flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white ${selectedTeam?.id === team.id ? "bg-indigo-700 text-white" : ""}`}
+                            >
+                                <FaUser className="mr-3" />
+                                <span className="hidden sm:inline">{team.title}</span>
+                            </button>
                         </li>
-                    ))
-                    }
+                    ))}
                 </ul>
             </nav>
         </aside>
