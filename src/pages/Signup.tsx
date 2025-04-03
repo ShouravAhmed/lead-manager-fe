@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { register, sendOtp } from "../services/authService";
+import { isAuthenticated } from '../services/authService';
 
 export default function Signup() {
     const [email, setEmail] = useState("");
@@ -10,13 +11,34 @@ export default function Signup() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [step, setStep] = useState(1);
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        if(isAuthenticated()) {
+            navigate("/dashboard");
+        }
+    }, []);  
+
+    const sendErrorAlert = (error: any) => {
+        if ((error as any)?.response?.data?.message) {
+            if (error instanceof Error && (error as any)?.response?.data?.message) {
+                alert((error as any).response.data.message);
+            } else {
+                alert("An unexpected error occurred.");
+            }
+        } else {
+            alert("An unexpected error occurred.");
+        }
+    };
 
     const handleSendOtp = async () => {
         try {
-            await sendOtp(email);
+            const res = await sendOtp(email);
+            if (res.message) alert(res.message);
             setStep(2);
-        } catch (error) {
+        } 
+        catch (error) {
             console.error("Error sending OTP:", error);
+            sendErrorAlert(error);
         }
     };
 
@@ -26,10 +48,13 @@ export default function Signup() {
             return;
         }
         try {
-            await register({ email, otp, username, password, confirm_password: confirmPassword });
-            navigate("/dashboard");
-        } catch (error) {
+            const res = await register({ email, otp, username, password, confirm_password: confirmPassword });
+            if (res.message) alert(res.message);
+            navigate("/login");
+        } 
+        catch (error) {
             console.error("Error during signup:", error);
+            sendErrorAlert(error);
         }
     };
 
@@ -57,12 +82,9 @@ export default function Signup() {
                 )}
                 {step === 2 && (
                     <div className="flex flex-col items-center">
-                        <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                            Email: <span className="font-medium">{email}</span>
+                        <p className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600">
+                            <span className="font-medium">{email}</span>
                         </p>
-                        <label htmlFor="otp" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                            OTP
-                        </label>
                         <input
                             type="text"
                             id="otp"
@@ -71,9 +93,6 @@ export default function Signup() {
                             className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
                             placeholder="Enter OTP"
                         />
-                        <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Username
-                        </label>
                         <input
                             type="text"
                             id="username"
@@ -82,9 +101,6 @@ export default function Signup() {
                             className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
                             placeholder="Enter your username"
                         />
-                        <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Password
-                        </label>
                         <input
                             type="password"
                             id="password"
@@ -93,9 +109,6 @@ export default function Signup() {
                             className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
                             placeholder="Enter your password"
                         />
-                        <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Confirm Password
-                        </label>
                         <input
                             type="password"
                             id="confirmPassword"

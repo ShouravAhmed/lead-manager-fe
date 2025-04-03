@@ -16,8 +16,12 @@ export const register = async (data: {
     return response.data;
 };
 
-export const login = async (data: { email: string; password: string }) => {
+export const login = async (data: { username: string; password: string }) => {
     const response = await API.post('/api/auth/login', data);
+    const { user, accessToken, refreshToken } = response.data;
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
     return response.data;
 };
 
@@ -32,13 +36,15 @@ export const resetPassword = async (data: {
     return response.data;
 };
 
-export const logout = async () => {
-    const response = await API.post('/api/auth/logout');
-    return response.data;
+export const logout = () => {
+    API.post('/api/auth/logout');
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
 };
 
-export const refreshToken = async (refreshtoken: string) => {
-    const response = await API.post('/api/auth/refresh-token', { refreshtoken });
+export const refreshToken = async (refreshToken: string) => {
+    const response = await API.post('/api/auth/refresh-token', { refreshToken });
     return response.data;
 };
 
@@ -49,5 +55,6 @@ export const getUserDetails = async () => {
 
 export const isAuthenticated = (): boolean => {
     const token = localStorage.getItem('accessToken');
+    console.log("IsAuthenticated: ", !!token);
     return !!token;
 };

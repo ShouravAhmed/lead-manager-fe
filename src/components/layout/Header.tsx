@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Use React Router's Link
 import { FcComboChart } from "react-icons/fc";
+import { useTheme } from "../../context/ThemeContext";
+import { isAuthenticated, logout } from "../../services/authService";
+import { FiLogOut } from "react-icons/fi";
 
 export default function Header() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState("light");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState("home");
 
@@ -29,27 +32,28 @@ export default function Header() {
     }
   };
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-    document.documentElement.classList.toggle("dark");
-  };
-
   if (!mounted) return null;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 shadow-md">
       {/* Brand Logo */}
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link
-          to="/"
-          className="flex items-center space-x-2 text-2xl font-bold text-blue-600 dark:text-blue-400 cursor-pointer"
+        <div className="flex items-center space-x-2 text-2xl font-bold text-blue-600 dark:text-blue-400 cursor-pointer"
+          onClick={() => {
+            if(isAuthenticated()) {
+              navigate("/dashboard");
+            }
+            else {
+              navigate("/");
+            }
+          }}
         >
           <FcComboChart size={30} className="text-blue-500" />
           <span>EdgeLead</span>
-        </Link>
+        </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-8">
+        {!isAuthenticated() && (<nav className="hidden md:flex space-x-8">
           <div
             onClick={() => handleNavClick("pricing")}
             className={`cursor-pointer transition-colors text-base ${
@@ -70,7 +74,7 @@ export default function Header() {
           >
             Products
           </div>
-        </nav>
+        </nav>)}
 
         <div className="flex items-center space-x-5">
           {/* Theme Toggle Button */}
@@ -104,7 +108,7 @@ export default function Header() {
             )}
           </button>
 
-          <nav className="hidden md:flex space-x-3">
+          {!isAuthenticated() && (<nav className="hidden md:flex space-x-3">
             <div
               onClick={() => handleNavClick("login")}
               className={`cursor-pointer transition-colors text-base ${
@@ -125,10 +129,10 @@ export default function Header() {
             >
               Try for free
             </div>
-          </nav>
+          </nav>)}
 
           {/* Mobile Menu Button */}
-          <button
+          {!isAuthenticated() && (<button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             aria-label="Toggle menu"
@@ -156,7 +160,21 @@ export default function Header() {
                 />
               )}
             </svg>
+          </button>)}
+        
+        {isAuthenticated() && (
+          <button
+            onClick={() => {
+              logout();
+              navigate("/login");
+            }}
+            className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Logout"
+          >
+            <FiLogOut size={20} />
+            <span className="text-base text-gray-700 dark:text-gray-300">Logout</span>
           </button>
+        )}
         </div>
       </div>
 

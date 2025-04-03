@@ -28,12 +28,12 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className={`flex flex-col h-screen overflow-hidden bg-white dark:bg-gray-900 ${isTransitioning ? 'page-transitioning' : ''}`}>
       <Header />
-      <main className="flex-grow overflow-auto pt-20 pb-12 md:pb-24">
-        <PageTransition>
-          <div className="page-content">
-            {children}
-          </div>
-        </PageTransition>
+      <main className="flex-grow overflow-auto pt-20">
+      <PageTransition>
+        <div className="page-content">
+        {children}
+        </div>
+      </PageTransition>
       </main>
     </div>
   );

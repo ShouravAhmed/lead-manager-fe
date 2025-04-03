@@ -24,18 +24,21 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const { data } = await API.get('/auth/me');
+                const { data } = await API.get('/api/auth/user');
+                localStorage.setItem('user', JSON.stringify(data));
                 setUser(data);
-            } catch (error) {
-                setUser(null);
+            } 
+            catch (error) {
+                console.error('Error fetching user:', error);
             }
-            setLoading(false);
         };
         fetchUser();
     }, []);
@@ -54,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

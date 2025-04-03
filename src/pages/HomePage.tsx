@@ -1,7 +1,17 @@
-import React from "react";
+import React, {useEffect} from "react";
 import CRMDashboard from "../assets/crm_dashboard.png"; 
+import { isAuthenticated } from '../services/authService';
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(isAuthenticated()) {
+      navigate("/dashboard");
+    }
+  }, []);  
+
   return (
     <div className="p-8 min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Header */}

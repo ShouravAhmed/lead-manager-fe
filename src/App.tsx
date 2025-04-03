@@ -5,7 +5,7 @@ import HomePage from './pages/HomePage';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 
-import DashboardLayout from './components/layout/DashboardLayout';
+import Team from './pages/Team';
 import { PrivateRoute } from './utils/privateRoute';
 
 
@@ -20,7 +20,7 @@ function App() {
               <Route path="/login" element={<Login />} />
 
               <Route path='/dashboard' element={<PrivateRoute />}>
-                <Route path="" element={<DashboardLayout />} />
+                <Route path="" element={<Team />} />
               </Route>
             </Routes>
           </Layout>

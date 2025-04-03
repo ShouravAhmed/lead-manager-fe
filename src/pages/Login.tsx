@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
+import { isAuthenticated } from '../services/authService';
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if(isAuthenticated()) {
+            navigate("/dashboard");
+        }
+    }, []);  
+
     const handleLogin = async () => {
         try {
-            await login({ email, password });
+            const res = await login({ username: email, password });
+            if(res.message) alert(res.message);
             navigate("/dashboard");
         } 
         catch (error) {
