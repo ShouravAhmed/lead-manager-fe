@@ -18,5 +18,5 @@ export const addMemberToTeam = async (id: string, data: { email: string }) => {
 export const getAllTeams = async () => {
     const response = await API.get('/api/team');
     localStorage.setItem('teams', JSON.stringify(response.data.teams));
-    return response.data;
+    return response.data.teams;
 };

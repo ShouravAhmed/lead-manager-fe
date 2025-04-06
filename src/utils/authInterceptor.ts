@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { logout } from '../services/authService';
 
-const API = axios.create({ baseURL: 'https://lead-manager-d9jy.onrender.com' });
-// const API = axios.create({ baseURL: 'http://localhost:8080' });
+// const API = axios.create({ baseURL: 'https://lead-manager-d9jy.onrender.com' });
+const API = axios.create({ baseURL: 'http://localhost:8080' });
 
 API.interceptors.request.use(async (config) => {
   let token = localStorage.getItem('accessToken');

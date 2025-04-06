@@ -2,60 +2,26 @@ import React, { ReactNode, useState, useEffect } from "react";
 import { FaUser, FaUsers, FaClipboardList, FaPlus, FaPhoneSlash, FaPhone, FaRedo, FaCheck, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import { User, Team } from "../types";
-import { getUserDetails } from "../services/authService";
-import { getAllTeams } from "../services/teamService";
+import { Team } from "../types";
+import { User } from "../types";
 
+interface DashboardLeftColumnProps {
+    teams: Team[];
+    userData: User | null;
+    selectedTeam: Team | null;
+    setSelectedTeam: React.Dispatch<React.SetStateAction<Team | null>>;
+    selectedItem: { name: string } | null;
+    setSelectedItem: React.Dispatch<React.SetStateAction<{ name: string } | null>>;
+}
 
-const DashboardLeftColumn = () => {
+const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, selectedItem, setSelectedItem }: DashboardLeftColumnProps) => {
     const navigate = useNavigate();
-    const [selectedTeam, setSelectedTeam] = useState<Team | null>(() => {
-        const storedTeam = localStorage.getItem("selectedTeam");
-        return storedTeam ? JSON.parse(storedTeam) : null;
-    });
-
-    const [selectedItem, setSelectedItem] = useState<{ name: string } | null>(() => {
-        const storedItem = localStorage.getItem("selectedItem");
-        return storedItem ? JSON.parse(storedItem) : { name: "My Leads" };
-    });
-
-    const [teams, setTeams] = useState<Team[]>([]);
-    useEffect(() => {
-        const storedTeams = localStorage.getItem('teams') ? JSON.parse(localStorage.getItem('teams')!) : null;
-        setTeams(storedTeams);
-        getAllTeams();
-    }, []);
-
-    const [userData, setUserData] = useState<User | null>(null);
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null;
-        setUserData(storedUser);
-        getUserDetails();
-    }, []);
-
-    const demoItems = 
-    [
-        { name: "Manage Members", icon: <FaUsers /> },
-        { name: "Team Leads", icon: <FaClipboardList /> },
-        { name: "My Leads", icon: <FaClipboardList /> },
-        { name: "Add Lead", icon: <FaPlus /> },
-        { name: "Unattended", icon: <FaPhoneSlash /> },
-        { name: "Callback", icon: <FaPhone /> },
-        { name: "Followup", icon: <FaRedo /> },
-        { name: "Sale Made", icon: <FaCheck /> },
-        { name: "Declined Sale", icon: <FaTimes />},
-    ]
-        
-    useEffect(() => {
-        localStorage.setItem("selectedTeam", JSON.stringify(selectedTeam));
-    }, [selectedTeam]);
-
-    useEffect(() => {
-        if(selectedItem?.name === "Add Lead") return;
-        localStorage.setItem("selectedItem", JSON.stringify(selectedItem));
-    }, [selectedItem]);
-
     
+    const teamNavItems = [
+        { name: "Manage Members", icon: <FaUsers /> },
+        { name: "Leads", icon: <FaClipboardList /> },
+        { name: "Add Lead", icon: <FaPlus /> }
+    ]
 
     return (
         <aside className="bg-white dark:bg-gray-800 text-grey-400 dark:text-white p-4 sm:w-64 flex-shrink-0 h-screen overflow-y-auto">
@@ -80,21 +46,26 @@ const DashboardLeftColumn = () => {
                     <span className="hidden sm:inline">{selectedTeam.title}</span>
                 </h3>
                 <ul className="space-y-2">
-                    {demoItems.map((item) => (
-                        <li key={item.name}>
-                            <button
-                                onClick={() => {
-                                    setSelectedItem({ name: item.name });
-                                }}
-                                className={`flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white ${
-                                    selectedItem?.name === item.name ? "bg-indigo-700 text-white" : ""
-                                }`}
-                            >
-                                <span className="mr-3">{item.icon}</span>
-                                <span className="hidden sm:inline">{item.name}</span>
-                            </button>
-                        </li>
-                    ))}
+                    {teamNavItems?.map((item) => {
+                        if (item.name === "Manage Members" && userData?._id !== selectedTeam?.owner) {
+                            return null; // Skip rendering this item
+                        }
+                        return (
+                            <li key={item.name}>
+                                <button
+                                    onClick={() => {
+                                        setSelectedItem({ name: item.name });
+                                    }}
+                                    className={`flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white ${
+                                        selectedItem?.name === item.name ? "bg-indigo-700 text-white" : ""
+                                    }`}
+                                >
+                                    <span className="mr-3">{item.icon}</span>
+                                    <span className="hidden sm:inline">{item.name}</span>
+                                </button>
+                            </li>
+                        );
+                    })}
                 </ul>
             </nav>}
 
@@ -104,20 +75,20 @@ const DashboardLeftColumn = () => {
                 <ul className="space-y-2">
                     <li>
                     <button
-                        onClick={() => navigate("/create-team")}
+                        onClick={() => setSelectedItem({ name: "Create Team" })}
                         className="flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white"
                     >
                         <FaPlus className="mr-3" />
                         <span className="hidden sm:inline">Create Team</span>
                     </button>
                     </li>
-                    {teams.map((team, index) => (
+                    {teams?.map((team, index) => (
                         <li key={index}>
                             <button
                                 onClick={() => {
                                     setSelectedTeam(team);
                                 }}
-                                className={`flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white ${selectedTeam?.id === team.id ? "bg-indigo-700 text-white" : ""}`}
+                                className={`flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white ${selectedTeam?._id === team._id ? "bg-indigo-700 text-white" : ""}`}
                             >
                                 <FaUser className="mr-3" />
                                 <span className="hidden sm:inline">{team.title}</span>

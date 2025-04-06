@@ -48,7 +48,6 @@ export const refreshToken = async (refreshToken: string) => {
 
 export const getUserDetails = async () => {
     const response = await API.get('/api/auth/user');
-    console.log("User data fetched: ", response.data);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data.user;
 };
