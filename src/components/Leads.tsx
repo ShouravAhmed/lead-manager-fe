@@ -5,13 +5,14 @@ import { getLeadsByTeam } from "../services/leadService";
 interface LeadProps {
     selectedTeam: Team | null;
     currentUser: User | null;
+    setSelectedItem: React.Dispatch<React.SetStateAction<{ name: string } | null>>;
 }
 
-const Leads = ({ selectedTeam, currentUser }: LeadProps) => {
+const Leads = ({ selectedTeam, currentUser, setSelectedItem }: LeadProps) => {
     const [filter, setFilter] = useState<string>("");
     const [allLeads, setAllLeads] = useState<Lead[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [showMyLeads, setShowMyLeads] = useState<boolean>(false);
+    const [showMyLeads, setShowMyLeads] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchLeads = async () => {
@@ -67,7 +68,7 @@ const Leads = ({ selectedTeam, currentUser }: LeadProps) => {
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white p-4 sm:p-6 flex flex-col items-center">
             <div className="w-full max-w-3xl">
                 <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">
-                    Manage Leads
+                    Leads
                 </h1>
                 <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
                     <button
@@ -135,7 +136,11 @@ const Leads = ({ selectedTeam, currentUser }: LeadProps) => {
                             </thead>
                             <tbody>
                                 {allLeads?.map((lead) => (
-                                    <tr key={lead._id} className="odd:bg-white even:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700">
+                                    <tr key={lead._id} className="odd:bg-white even:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700"
+                                        onClick={() => {
+                                            localStorage.setItem("selectedLead", JSON.stringify(lead));
+                                            setSelectedItem({ name: "Manage Lead" });
+                                        }}>
                                         <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
                                             {lead.client?.fullName || "N/A"}
                                         </td>

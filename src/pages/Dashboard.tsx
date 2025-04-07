@@ -13,6 +13,7 @@ import ManageMembers from "../components/ManageMembers";
 import CreateTeam from "../components/CreateTeam";
 import AddLead from "../components/AddLead";
 import Leads from "../components/Leads";
+import ManageLead from "../components/ManageLead";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -24,7 +25,14 @@ const Dashboard = () => {
 
     const [selectedItem, setSelectedItem] = useState<{ name: string } | null>(() => {
         const storedItem = localStorage.getItem("selectedItem");
-        return storedItem ? JSON.parse(storedItem) : { name: "Leads" };
+        if(storedItem) return JSON.parse(storedItem);
+        try{
+            if(selectedItem) return { name: "Leads" };
+        }
+        catch (error) {
+            console.error("selectedItem is not defined");
+        }
+        return null;
     });
 
     const [teams, setTeams] = useState<Team[]>([]);
@@ -46,12 +54,14 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
+        if(!selectedTeam)  return;
         localStorage.setItem("selectedTeam", JSON.stringify(selectedTeam));
         setSelectedItem({ name: "Leads" });
     }, [selectedTeam]);
 
     useEffect(() => {
         if(selectedItem?.name === "Add Lead" || selectedItem?.name == "Create Team") return;
+        console.log("selectedItem", selectedItem);
         localStorage.setItem("selectedItem", JSON.stringify(selectedItem));
     }, [selectedItem]);
 
@@ -80,8 +90,9 @@ const Dashboard = () => {
             <main className="flex-grow overflow-y-auto h-full">
                 {selectedItem?.name === "Manage Members" && <ManageMembers setSelectedTeam={setSelectedTeam}  selectedTeam={selectedTeam}/>}
                 {selectedItem?.name === "Create Team" && <CreateTeam  setSelectedTeam={setSelectedTeam} setSelectedItem={setSelectedItem} setTeams={setTeams} updateTeams={updateTeams} />}
-                {selectedItem?.name === "Leads" && <Leads currentUser={userData} selectedTeam={selectedTeam} />}
+                {selectedItem?.name === "Leads" && <Leads setSelectedItem={setSelectedItem} currentUser={userData} selectedTeam={selectedTeam} />}
                 {selectedItem?.name === "Add Lead" && <AddLead selectedTeam={selectedTeam} setSelectedItem={setSelectedItem} />}
+                {selectedItem?.name === "Manage Lead" && <ManageLead setSelectedItem={setSelectedItem} />}
             </main>
         </div>
     );

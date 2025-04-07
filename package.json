@@ -1,8 +1,11 @@
 {
-  "name": "portfolio-ai",
+  "name": "edgelead",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://erfanul007.github.io/portfolio-ai/",
+  "homepage": "https://www.edgelead.com",
+  "description": "Edgelead is a platform that connects businesses with top talent in the tech industry. We provide a range of services to help companies find, hire, and manage their remote teams.",
+  "author": "Edgelead",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
