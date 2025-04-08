@@ -67,12 +67,27 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white p-4 sm:p-6 flex flex-col items-center">
+            {selectedLead ?
             <div className="w-full max-w-lg sm:max-w-xl bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
                 <h1 className="text-2xl font-bold mb-6 text-center">Manage Lead</h1>
 
                 {/* Lead Details */}
                 <div className="mb-6">
-                    <h2 className="text-lg font-semibold mb-2">Lead Details</h2>
+                    <h2 className="text-lg font-semibold mb-4">Lead Details</h2>
+                    <div className="flex flex-wrap space-x-4 mb-7">
+                        <div>
+                            <label className="block text-sm font-medium">Created By:</label>
+                            <span className="ml-2 text-xs">{selectedLead?.createdBy?.username}</span>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Created At:</label>
+                            <span className="ml-2 text-xs">{selectedLead?.createdAt?.toLocaleString().split('T')[0]} {selectedLead?.createdAt?.toLocaleString().split('T')[1].split('.')[0]}</span>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Updated At:</label>
+                            <span className="ml-2 text-xs">{selectedLead?.updatedAt?.toLocaleString().split('T')[0]} {selectedLead?.updatedAt?.toLocaleString().split('T')[1].split('.')[0]}</span>
+                        </div>
+                    </div>
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium">Status</label>
@@ -115,7 +130,25 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                         {client && (
                             <>
                                 <div>
-                                    <label className="block text-sm font-medium">Full Name</label>
+                                    <label className="block text-sm font-medium">Phone</label>
+                                    <input
+                                        type="text"
+                                        value={client.phone || ""}
+                                        readOnly
+                                        className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Business Name</label>
+                                    <input
+                                        type="text"
+                                        value={client.businessName || ""}
+                                        onChange={(e) => setClient({ ...client, businessName: e.target.value })}
+                                        className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Client Name</label>
                                     <input
                                         type="text"
                                         value={client.fullName || ""}
@@ -260,7 +293,8 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> :
+            <p>No lead is selected</p>}
         </div>
     );
 };
