@@ -1,7 +1,6 @@
-import React, { ReactNode, useState, useEffect } from "react";
-import { FaUser, FaUsers, FaClipboardList, FaPlus, FaPhoneSlash, FaPhone, FaRedo, FaCheck, FaTimes } from "react-icons/fa";
+import React from "react";
+import { FaUser, FaUsers, FaClipboardList, FaPlus } from "react-icons/fa";
 import { SiGoogledataproc } from "react-icons/si";
-import { useNavigate } from "react-router-dom";
 
 import { Team } from "../types";
 import { User } from "../types";
@@ -16,8 +15,6 @@ interface DashboardLeftColumnProps {
 }
 
 const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, selectedItem, setSelectedItem }: DashboardLeftColumnProps) => {
-    const navigate = useNavigate();
-    
     const teamNavItems = [
         { name: "Manage Members", icon: <FaUsers /> },
         { name: "Manage Lead", icon: <SiGoogledataproc /> },

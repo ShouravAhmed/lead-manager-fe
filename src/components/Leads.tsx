@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { Lead, Team, User } from "../types";
 import { getLeadsByTeam } from "../services/leadService";
 
@@ -8,7 +8,7 @@ interface LeadProps {
     setSelectedItem: React.Dispatch<React.SetStateAction<{ name: string } | null>>;
 }
 
-const Leads = ({ selectedTeam, currentUser, setSelectedItem }: LeadProps) => {
+const Leads = ({ selectedTeam, setSelectedItem }: LeadProps) => {
     const [filter, setFilter] = useState<string>("");
     const [allLeads, setAllLeads] = useState<Lead[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
