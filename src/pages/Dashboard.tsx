@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 import DashboardLeftColumn from "../components/DashboardLeftColumn";
 
@@ -16,7 +15,6 @@ import Leads from "../components/Leads";
 import ManageLead from "../components/ManageLead";
 
 const Dashboard = () => {
-    const navigate = useNavigate();
 
     const [selectedTeam, setSelectedTeam] = useState<Team | null>(() => {
         const storedTeam = localStorage.getItem("selectedTeam");
@@ -92,7 +90,7 @@ const Dashboard = () => {
                 {selectedItem?.name === "Create Team" && <CreateTeam  setSelectedTeam={setSelectedTeam} setSelectedItem={setSelectedItem} setTeams={setTeams} updateTeams={updateTeams} />}
                 {selectedItem?.name === "Leads" && <Leads setSelectedItem={setSelectedItem} currentUser={userData} selectedTeam={selectedTeam} />}
                 {selectedItem?.name === "Add Lead" && <AddLead selectedTeam={selectedTeam} setSelectedItem={setSelectedItem} />}
-                {selectedItem?.name === "Manage Lead" && <ManageLead setSelectedItem={setSelectedItem} />}
+                {selectedItem?.name === "Manage Lead" && <ManageLead />}
             </main>
         </div>
     );

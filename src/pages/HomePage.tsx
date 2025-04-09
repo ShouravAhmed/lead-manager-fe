@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import CRMDashboard from "../assets/crm_dashboard.png"; 
 import { isAuthenticated } from '../services/authService';
 import { useNavigate } from "react-router-dom";
