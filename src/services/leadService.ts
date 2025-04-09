@@ -40,7 +40,7 @@ export const updateLead = async (
     }
 ) => {
     const response = await API.put(`/api/lead/${id}`, data);
-    return response.data;
+    return response.data.lead;
 };
 
 export const addCommentToLead = async (id: string, data: { comment: string }) => {

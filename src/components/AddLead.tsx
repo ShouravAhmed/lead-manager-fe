@@ -32,20 +32,27 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
         };
     });
     const [isCreatingClient, setIsCreatingClient] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSearchClient = async () => {
         try {
+            setIsLoading(true);
             const clients = await getClientsByTeamAndPhone(selectedTeam?._id ?? "", clientPhone);
             setSearchedClients(clients);
-        } catch (error) {
+        } 
+        catch (error) {
             console.error("Failed to search client:", error);
             alert("Client not found. You can create a new client.");
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
     const handleCreateClient = async () => {
         if (!selectedTeam) return alert("No team selected.");
         try {
+            setIsLoading(true);
             if (!newClient) return alert("Please fill in all fields.");
             newClient.deposit = parseFloat(String(newClient.deposit || "0"));
             newClient.lookingFor = parseFloat(String(newClient.lookingFor || "0"));
@@ -59,13 +66,17 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
         } 
         catch (error) {
             console.error("Failed to create client:", error);
-            alert("Failed to create client. Please try again.");
+            alert((error as any).response?.data?.message || "Failed to create client. Please try again.");
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
     const handleCreateLead = async () => {
         if (!selectedTeam || !selectedClient) return alert("Please select a team and client.");
         try {
+            setIsLoading(true);
             await createLead({
                 team: selectedTeam?._id ?? "",
                 client: selectedClient?._id ?? "",
@@ -76,6 +87,9 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
         catch (error) {
             console.error("Failed to create lead:", error);
             alert("Failed to create lead. Please try again.");
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
@@ -89,6 +103,12 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white p-4 sm:p-6 flex flex-col items-center">
+            {isLoading && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-100"></div>
+                </div>
+            )}
+            
             <div className="w-full max-w-sm sm:max-w-md">
                 <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">
                     Add Lead

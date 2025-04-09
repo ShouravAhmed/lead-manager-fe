@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lead, Client, User } from "../types";
+import { Lead, Client, User, LeadComment } from "../types";
 import {
     updateLead,
     addCommentToLead,
@@ -22,28 +22,53 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
     const [newComment, setNewComment] = useState<string>("");
     const [editingComment, setEditingComment] = useState<{ id: string; text: string } | null>(null);
     const [currentOwnerEmail, setCurrentOwnerEmail] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleLeadAndClientUpdate = async () => {
-        if (selectedLead && selectedLead._id) {
-            const updatedLead = await updateLead(selectedLead._id, {
-            status: selectedLead.status,
-            followupAt: selectedLead.followupAt instanceof Date ? selectedLead.followupAt.toISOString() : selectedLead.followupAt,
-            closingNote: selectedLead.closingNote,
-            });
-            setSelectedLead(updatedLead);
-            localStorage.setItem("selectedLead", JSON.stringify(updatedLead));
+        try{
+            setIsLoading(true);
+            if (selectedLead && selectedLead._id) {
+                const updatedLead = await updateLead(selectedLead._id, {
+                    status: selectedLead.status,
+                    followupAt: selectedLead.followupAt instanceof Date ? selectedLead.followupAt.toISOString() : selectedLead.followupAt,
+                    closingNote: selectedLead.closingNote,
+                });
+                localStorage.setItem("selectedLead", JSON.stringify(selectedLead));
+            }
+            if (client && client._id) {
+                const updatedClient = await updateClient(client._id, client);
+            }
+            alert("Lead updated successfully!");
         }
-        if (client && client._id) {
-            await updateClient(client._id, client);
-            alert("Client updated successfully!");
+        catch (error) {
+            console.error("Error updating lead:", error);
+            alert("Failed to update lead. Please try again.");
+        }
+        finally{
+            setIsLoading(false);
         }
     };
 
     const handleAddComment = async () => {
         if (selectedLead && selectedLead._id && newComment.trim()) {
-            const updatedLead = await addCommentToLead(selectedLead._id, { comment: newComment });
-            setSelectedLead(updatedLead);
-            setNewComment("");
+            try{
+                setIsLoading(true);
+                const updatedLead = await addCommentToLead(selectedLead._id, { comment: newComment });
+                setSelectedLead((prevLead: Lead | null) => {
+                    return {
+                        ...prevLead,
+                        comments: [...(updatedLead?.comments as LeadComment[] || [])],
+                    };
+                });
+                setNewComment("");
+            }
+            catch (error) {
+                console.error("Error adding comment:", error);
+                alert("Failed to add comment. Please try again.");
+            }
+            finally{
+                setIsLoading(false);
+            }
         }
     };
 
@@ -57,14 +82,37 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
 
     const handleUpdateCurrentOwner = async () => {
         if (selectedLead && selectedLead._id && currentOwnerEmail.trim()) {
-            const updatedLead = await updateLeadCurrentOwner(selectedLead._id, { email: currentOwnerEmail });
-            setSelectedLead(updatedLead);
-            setCurrentOwnerEmail("");
+            try{
+                setIsLoading(true);
+                const updatedLead = await updateLeadCurrentOwner(selectedLead._id, { email: currentOwnerEmail });
+                console.log({ updatedLead });
+                setSelectedLead((prv) => {
+                    return {
+                        ...prv,
+                        currentOwner: { email: currentOwnerEmail, username: currentOwnerEmail },
+                    };
+                });
+                setCurrentOwnerEmail("");
+            }
+            catch (error) {
+                console.error("Error updating current owner:", error);
+                alert("Failed to update current owner. Please try again.");
+            }
+            finally{
+                alert("Owner updated successfully!");
+                setIsLoading(false);
+            }
         }
     };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white p-4 sm:p-6 flex flex-col items-center">
+            {isLoading && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-100"></div>
+                </div>
+            )}
+
             {selectedLead ?
             <div className="w-full max-w-lg sm:max-w-xl bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
                 <h1 className="text-2xl font-bold mb-6 text-center">Manage Lead</h1>
@@ -261,7 +309,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                                 <textarea
                                     value={editingComment.text}
                                     onChange={(e) => setEditingComment({ ...editingComment, text: e.target.value })}
-                                    className="w-full mt-1 p-2 border rounded"
+                                    className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <button
                                     onClick={handleUpdateComment}

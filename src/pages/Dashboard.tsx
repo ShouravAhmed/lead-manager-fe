@@ -57,11 +57,11 @@ const Dashboard = () => {
         if(!selectedTeam)  return;
         localStorage.setItem("selectedTeam", JSON.stringify(selectedTeam));
         setSelectedItem({ name: "Leads" });
+        localStorage.removeItem("selectedLead");
     }, [selectedTeam]);
 
     useEffect(() => {
         if(selectedItem?.name === "Add Lead" || selectedItem?.name == "Create Team") return;
-        console.log("selectedItem", selectedItem);
         localStorage.setItem("selectedItem", JSON.stringify(selectedItem));
     }, [selectedItem]);
 

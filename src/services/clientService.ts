@@ -8,7 +8,7 @@ export const createClient = async (data: Client) => {
 
 export const updateClient = async (id: string, data: Client) => {
     const response = await API.put(`/api/client/${id}`, data);
-    return response.data;
+    return response.data.client;
 };
 
 export const getClientsByTeamAndPhone = async (team: string, phone?: string) => {
