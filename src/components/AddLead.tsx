@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { FiX } from "react-icons/fi";
-
-import { useNavigate } from "react-router-dom";
 
 import { Team } from "../types";
 import { Client } from "../types";
@@ -15,8 +12,6 @@ interface AddLeadProps {
 }
 
 const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
-    const navigate = useNavigate();
-
     const [clientPhone, setClientPhone] = useState("");
     const [searchedClients, setSearchedClients] = useState<Client[]>([]);
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);

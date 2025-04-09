@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Lead, Client, User, LeadComment } from "../types";
+import  { useState } from "react";
+import { Lead, Client, LeadComment } from "../types";
 import {
     updateLead,
     addCommentToLead,
@@ -8,12 +7,7 @@ import {
 } from "../services/leadService";
 import { updateClient } from "../services/clientService";
 
-interface ManageLeadProps {
-    setSelectedItem: React.Dispatch<React.SetStateAction<{ name: string } | null>>;
-}
-
-const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
-    const navigate = useNavigate();
+const ManageLead = () => {
     const [selectedLead, setSelectedLead] = useState<Lead | null>(() => {
         const storedLead = localStorage.getItem("selectedLead");
         return storedLead ? JSON.parse(storedLead) : null;
@@ -28,7 +22,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
         try{
             setIsLoading(true);
             if (selectedLead && selectedLead._id) {
-                const updatedLead = await updateLead(selectedLead._id, {
+                await updateLead(selectedLead._id, {
                     status: selectedLead.status,
                     followupAt: selectedLead.followupAt instanceof Date ? selectedLead.followupAt.toISOString() : selectedLead.followupAt,
                     closingNote: selectedLead.closingNote,
@@ -36,7 +30,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                 localStorage.setItem("selectedLead", JSON.stringify(selectedLead));
             }
             if (client && client._id) {
-                const updatedClient = await updateClient(client._id, client);
+                await updateClient(client._id, client);
             }
             alert("Lead updated successfully!");
         }
@@ -100,7 +94,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
         if (selectedLead && selectedLead._id && currentOwnerEmail.trim()) {
             try{
                 setIsLoading(true);
-                const updatedLead = await updateLeadCurrentOwner(selectedLead._id, { email: currentOwnerEmail });
+                await updateLeadCurrentOwner(selectedLead._id, { email: currentOwnerEmail });
                 setSelectedLead((prv) => {
                     return {
                         ...prv,
