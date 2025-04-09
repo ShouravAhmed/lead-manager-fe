@@ -42,7 +42,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
         }
         catch (error) {
             console.error("Error updating lead:", error);
-            alert("Failed to update lead. Please try again.");
+            alert((error as any).response?.data?.message || "Failed to update lead. Please try again.");
         }
         finally{
             setIsLoading(false);
@@ -64,7 +64,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
             }
             catch (error) {
                 console.error("Error adding comment:", error);
-                alert("Failed to add comment. Please try again.");
+                alert((error as any).response?.data?.message || "Failed to add comment. Please try again.");
             }
             finally{
                 setIsLoading(false);
@@ -74,9 +74,25 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
 
     const handleUpdateComment = async () => {
         if (selectedLead && selectedLead._id && editingComment) {
-            const updatedLead = await addCommentToLead(selectedLead._id, { comment: editingComment.text });
-            setSelectedLead(updatedLead);
-            setEditingComment(null);
+            try{
+                setIsLoading(true);
+                
+                const updatedLead = await addCommentToLead(selectedLead._id, { comment: editingComment.text });
+                setSelectedLead((prevLead: Lead | null) => {
+                    return {
+                        ...prevLead,
+                        comments: [...(updatedLead?.comments as LeadComment[] || [])],
+                    };
+                });
+                setEditingComment(null);
+            }
+            catch (error) {
+                console.error("Error adding comment:", error);
+                alert("Failed to add comment. Please try again.");
+            }
+            finally{
+                setIsLoading(false);
+            }
         }
     };
 
@@ -85,7 +101,6 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
             try{
                 setIsLoading(true);
                 const updatedLead = await updateLeadCurrentOwner(selectedLead._id, { email: currentOwnerEmail });
-                console.log({ updatedLead });
                 setSelectedLead((prv) => {
                     return {
                         ...prv,
@@ -96,7 +111,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
             }
             catch (error) {
                 console.error("Error updating current owner:", error);
-                alert("Failed to update current owner. Please try again.");
+                alert((error as any).response?.data?.message || "Failed to update current owner. Please try again.");
             }
             finally{
                 alert("Owner updated successfully!");
@@ -297,7 +312,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                             <div key={comment._id} className="flex items-start space-x-2">
                                 <p className="flex-1">{comment.comment}</p>
                                 <button
-                                    onClick={() => setEditingComment({ id: comment._id!, text: comment.comment! })}
+                                    // onClick={() => setEditingComment({ id: comment._id!, text: comment.comment! })}
                                     className="text-indigo-600"
                                 >
                                     Edit
