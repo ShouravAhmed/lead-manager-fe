@@ -23,21 +23,19 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
     const [editingComment, setEditingComment] = useState<{ id: string; text: string } | null>(null);
     const [currentOwnerEmail, setCurrentOwnerEmail] = useState<string>("");
 
-    const handleClientUpdate = async () => {
+    const handleLeadAndClientUpdate = async () => {
+        if (selectedLead && selectedLead._id) {
+            const updatedLead = await updateLead(selectedLead._id, {
+            status: selectedLead.status,
+            followupAt: selectedLead.followupAt instanceof Date ? selectedLead.followupAt.toISOString() : selectedLead.followupAt,
+            closingNote: selectedLead.closingNote,
+            });
+            setSelectedLead(updatedLead);
+            localStorage.setItem("selectedLead", JSON.stringify(updatedLead));
+        }
         if (client && client._id) {
             await updateClient(client._id, client);
             alert("Client updated successfully!");
-        }
-    };
-
-    const handleLeadUpdate = async (field: Partial<Lead>) => {
-        if (selectedLead && selectedLead._id) {
-            const updatedLead = await updateLead(selectedLead._id, {
-                ...field,
-                followupAt: field.followupAt instanceof Date ? field.followupAt.toISOString() : field.followupAt,
-            });
-            setSelectedLead(updatedLead);
-            alert("Lead updated successfully!");
         }
     };
 
@@ -93,7 +91,12 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                             <label className="block text-sm font-medium">Status</label>
                             <select
                                 value={selectedLead?.status || ""}
-                                onChange={(e) => handleLeadUpdate({ status: e.target.value as Lead["status"] })}
+                                onChange={(e) =>
+                                    setSelectedLead((prv) => ({
+                                        ...prv!,
+                                        status: e.target.value as Lead["status"],
+                                    }))
+                                }
                                 className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="Processing">Processing</option>
@@ -107,8 +110,13 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                             <label className="block text-sm font-medium">Follow-up At</label>
                             <input
                                 type="datetime-local"
-                                value={selectedLead?.followupAt?.toString().slice(0, 16) || ""}
-                                onChange={(e) => handleLeadUpdate({ followupAt: new Date(e.target.value) })}
+                                value={selectedLead?.followupAt ? new Date(selectedLead.followupAt).toLocaleString("sv-SE", { timeZoneName: "short" }).slice(0, 16) : ""}
+                                onChange={(e) =>
+                                    setSelectedLead((prv) => ({
+                                        ...prv!,
+                                        followupAt: new Date(e.target.value) as Lead["followupAt"],
+                                    }))
+                                }
                                 className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
@@ -116,7 +124,12 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                             <label className="block text-sm font-medium">Closing Note</label>
                             <textarea
                                 value={selectedLead?.closingNote || ""}
-                                onChange={(e) => handleLeadUpdate({ closingNote: e.target.value })}
+                                onChange={(e) =>
+                                    setSelectedLead((prv) => ({
+                                        ...prv!,
+                                        closingNote: e.target.value as Lead["closingNote"],
+                                    }))
+                                }
                                 className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
@@ -125,7 +138,7 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
 
                 {/* Client Details */}
                 <div className="mb-6">
-                    <h2 className="text-lg font-semibold mb-2">Client Details</h2>
+                    <h2 className="text-lg font-semibold mb-4 mt-8">Client Details</h2>
                     <div className="space-y-4">
                         {client && (
                             <>
@@ -218,10 +231,10 @@ const ManageLead = ({ setSelectedItem }: ManageLeadProps) => {
                                     />
                                 </div>
                                 <button
-                                    onClick={handleClientUpdate}
+                                    onClick={handleLeadAndClientUpdate}
                                     className="w-full bg-indigo-600 text-white py-2 rounded mt-4"
                                 >
-                                    Update Client
+                                    Update Lead
                                 </button>
                             </>
                         )}
