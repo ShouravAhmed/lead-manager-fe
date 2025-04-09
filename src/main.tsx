@@ -4,7 +4,7 @@ import App from './App.tsx'
 import './index.css'
 
 // Import the favicon from assets directory
-import favicon from './assets/portfolio-icon.svg'
+import favicon from './assets/edge-lead.svg'
 
 // Set the favicon programmatically
 const link = document.createElement('link')
