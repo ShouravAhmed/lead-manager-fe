@@ -1,5 +1,4 @@
 import API from "../utils/authInterceptor";
-import { Lead } from "../types";
 
 export const getLeadById = async (id: string) => {
     const response = await API.get(`/api/lead/${id}`);
