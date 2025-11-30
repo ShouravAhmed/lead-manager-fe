@@ -14,6 +14,14 @@ const Leads = ({ selectedTeam, setSelectedItem }: LeadProps) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [showMyLeads, setShowMyLeads] = useState<boolean>(true);
 
+    const formatStatus = (status?: string): string => {
+        if (!status) return "N/A";
+        if (status === "SaleMade") return "Sale Made";
+        if (status === "DeclinedSale") return "Declined Sale";
+        if (status === "CallbackRequested") return "Callback Requested";
+        return status;
+    };
+
     useEffect(() => {
         const fetchLeads = async () => {
             if (!selectedTeam) {
@@ -34,9 +42,9 @@ const Leads = ({ selectedTeam, setSelectedItem }: LeadProps) => {
                 } else if (filter === "Followup") {
                     params.status = "Followup";
                 } else if (filter === "Sale Made") {
-                    params.status = "Sale Made";
+                    params.status = "SaleMade";
                 } else if (filter === "Declined Sale") {
-                    params.status = "Declined Sale";
+                    params.status = "DeclinedSale";
                 }
                 let fetchedLeads = await getLeadsByTeam(selectedTeam._id ?? "", params);
                 
@@ -135,13 +143,13 @@ const Leads = ({ selectedTeam, setSelectedItem }: LeadProps) => {
                                                 {lead.client?.fullName || "N/A"}
                                             </h3>
                                             <span className={`px-2 py-1 text-xs rounded-full ${
-                                                lead.status === "Sale Made" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" :
-                                                lead.status === "Declined Sale" ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" :
+                                                lead.status === "SaleMade" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" :
+                                                lead.status === "DeclinedSale" ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" :
                                                 lead.status === "Processing" ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" :
                                                 lead.status === "CallbackRequested" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" :
                                                 "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                                             }`}>
-                                                {lead.status || "N/A"}
+                                                {formatStatus(lead.status)}
                                             </span>
                                         </div>
                                         <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
@@ -191,7 +199,7 @@ const Leads = ({ selectedTeam, setSelectedItem }: LeadProps) => {
                                                 {lead.currentOwner?.username || "N/A"}
                                             </td>
                                             <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
-                                                {lead.status || "N/A"}
+                                                {formatStatus(lead.status)}
                                             </td>
                                             <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
                                                 {lead.followupAt ? new Date(lead.followupAt).toLocaleDateString() : "N/A"}

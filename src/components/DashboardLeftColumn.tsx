@@ -16,7 +16,7 @@ interface DashboardLeftColumnProps {
     setIsSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, selectedItem, setSelectedItem, isSidebarOpen = false, setIsSidebarOpen }: DashboardLeftColumnProps) => {
+const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, selectedItem, setSelectedItem, isSidebarOpen = false }: DashboardLeftColumnProps) => {
     const teamNavItems = [
         { name: "Manage Members", icon: <FaUsers /> },
         { name: "Manage Lead", icon: <SiGoogledataproc /> },
