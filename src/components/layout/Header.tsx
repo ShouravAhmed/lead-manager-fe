@@ -4,6 +4,8 @@ import { FcComboChart } from "react-icons/fc";
 import { useTheme } from "../../context/ThemeContext";
 import { isAuthenticated, logout } from "../../services/authService";
 import { FiLogOut } from "react-icons/fi";
+import { FiSettings } from "react-icons/fi";
+import { User } from "../../types";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -12,8 +14,36 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState("home");
+  const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    const loadUser = () => {
+      if (isAuthenticated()) {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      }
+    };
+    loadUser();
+    
+    // Listen for storage changes (when user is updated elsewhere)
+    const handleStorageChange = () => {
+      loadUser();
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check periodically (for same-tab updates)
+    const interval = setInterval(loadUser, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const isAdmin = user?.role === 'admin' || user?.role === 'superAdmin';
 
   const handleNavClick = (sectionId: string) => {
     setCurrentSection(sectionId);
@@ -75,6 +105,16 @@ export default function Header() {
         </nav>)}
 
         <div className="flex items-center space-x-5">
+          {isAuthenticated() && isAdmin && (
+            <button
+              onClick={() => navigate('/admin')}
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Admin Dashboard"
+              title="Admin Dashboard"
+            >
+              <FiSettings className="h-6 w-6" />
+            </button>
+          )}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"

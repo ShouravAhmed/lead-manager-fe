@@ -8,6 +8,7 @@ export interface User {
     bio?: string;
     password?: string;
     profilePicture?: string;
+    role?: 'user' | 'admin' | 'superAdmin';
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -19,6 +20,7 @@ export interface Team {
     members?: User[];
     owner?: string;
     isVerified?: boolean;
+    isVarified?: boolean; // Backend uses isVarified (typo), keeping both for compatibility
     createdAt?: Date;
     updatedAt?: Date;
 }

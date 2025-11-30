@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound'; // Import the NotFound component
 
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import { PrivateRoute } from './utils/privateRoute';
 
 
@@ -22,6 +23,10 @@ function App() {
 
               <Route path='/dashboard' element={<PrivateRoute />}>
                 <Route path="" element={<Dashboard />} />
+              </Route>
+
+              <Route path='/admin' element={<PrivateRoute />}>
+                <Route path="" element={<AdminDashboard />} />
               </Route>
 
               <Route path="*" element={<NotFound />} /> // Add the catch-all route for 404 page
