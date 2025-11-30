@@ -12,9 +12,11 @@ interface DashboardLeftColumnProps {
     setSelectedTeam: React.Dispatch<React.SetStateAction<Team | null>>;
     selectedItem: { name: string } | null;
     setSelectedItem: React.Dispatch<React.SetStateAction<{ name: string } | null>>;
+    isSidebarOpen?: boolean;
+    setIsSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, selectedItem, setSelectedItem }: DashboardLeftColumnProps) => {
+const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, selectedItem, setSelectedItem, isSidebarOpen = false, setIsSidebarOpen }: DashboardLeftColumnProps) => {
     const teamNavItems = [
         { name: "Manage Members", icon: <FaUsers /> },
         { name: "Manage Lead", icon: <SiGoogledataproc /> },
@@ -23,7 +25,9 @@ const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, s
     ]
 
     return (
-        <aside className="bg-white dark:bg-gray-800 text-grey-400 dark:text-white p-4 sm:w-64 flex-shrink-0 h-screen overflow-y-auto">
+        <aside className={`fixed md:static inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 text-grey-400 dark:text-white p-4 w-64 flex-shrink-0 h-screen overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}>
             {/* Profile Section */}
             <div className="flex items-center mb-8 sticky top-0 bg-white dark:bg-gray-800 z-10">
                 <img
@@ -31,18 +35,17 @@ const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, s
                     alt="Profile"
                     className="rounded-full w-12 h-12"
                 />
-                <div className="ml-4 hidden sm:block">
-                    <h2 className="text-lg font-bold">{userData?.username}</h2>
-                    <p className="text-sm text-blue-600 dark:text-blue-300">{userData?.title}</p>
+                <div className="ml-4">
+                    <h2 className="text-base sm:text-lg font-bold">{userData?.username}</h2>
+                    <p className="text-xs sm:text-sm text-blue-600 dark:text-blue-300">{userData?.title}</p>
                 </div>
             </div>
 
             {/* Selected Team Section */}
             {selectedTeam &&
             <nav className="mb-8">
-                <h3 className="text-sm font-semibold text-indigo-600 dark:text-indigo-300 uppercase mb-4">
-                    <span className="sm:hidden">Team</span>
-                    <span className="hidden sm:inline">{selectedTeam.title}</span>
+                <h3 className="text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-300 uppercase mb-4">
+                    {selectedTeam.title}
                 </h3>
                 <ul className="space-y-2">
                     {teamNavItems?.map((item) => {
@@ -59,8 +62,8 @@ const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, s
                                         selectedItem?.name === item.name ? "bg-indigo-700 text-white" : ""
                                     }`}
                                 >
-                                    <span className="mr-3">{item.icon}</span>
-                                    <span className="hidden sm:inline">{item.name}</span>
+                                    <span className="mr-3 flex-shrink-0">{item.icon}</span>
+                                    <span className="text-sm sm:text-base">{item.name}</span>
                                 </button>
                             </li>
                         );
@@ -70,15 +73,15 @@ const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, s
 
             {/* Team Section */}
             <nav>
-                <h3 className="text-sm font-semibold text-indigo-600 dark:text-indigo-300 uppercase mb-4">Teams</h3>
+                <h3 className="text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-300 uppercase mb-4">Teams</h3>
                 <ul className="space-y-2">
                     <li>
                     <button
                         onClick={() => setSelectedItem({ name: "Create Team" })}
                         className="flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white"
                     >
-                        <FaPlus className="mr-3" />
-                        <span className="hidden sm:inline">Create Team</span>
+                        <FaPlus className="mr-3 flex-shrink-0" />
+                        <span className="text-sm sm:text-base">Create Team</span>
                     </button>
                     </li>
                     {teams?.map((team, index) => (
@@ -89,8 +92,8 @@ const DashboardLeftColumn = ({ teams, userData, selectedTeam, setSelectedTeam, s
                                 }}
                                 className={`flex items-center w-full text-left p-2 rounded hover:bg-indigo-700 hover:text-white ${selectedTeam?._id === team._id ? "bg-indigo-700 text-white" : ""}`}
                             >
-                                <FaUser className="mr-3" />
-                                <span className="hidden sm:inline">{team.title}</span>
+                                <FaUser className="mr-3 flex-shrink-0" />
+                                <span className="text-sm sm:text-base truncate">{team.title}</span>
                             </button>
                         </li>
                     ))}

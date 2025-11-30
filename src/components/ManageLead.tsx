@@ -123,24 +123,24 @@ const ManageLead = () => {
             )}
 
             {selectedLead ?
-            <div className="w-full max-w-lg sm:max-w-xl bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
-                <h1 className="text-2xl font-bold mb-6 text-center">Manage Lead</h1>
+            <div className="w-full max-w-lg sm:max-w-xl bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 sm:p-6">
+                <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center">Manage Lead</h1>
 
                 {/* Lead Details */}
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold mb-4">Lead Details</h2>
-                    <div className="flex flex-wrap space-x-4 mb-7">
-                        <div>
-                            <label className="block text-sm font-medium">Created By:</label>
-                            <span className="ml-2 text-xs">{selectedLead?.createdBy?.username}</span>
+                <div className="mb-4 sm:mb-6">
+                    <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Lead Details</h2>
+                    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-7">
+                        <div className="text-sm">
+                            <label className="block text-xs sm:text-sm font-medium">Created By:</label>
+                            <span className="text-xs sm:text-sm">{selectedLead?.createdBy?.username}</span>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium">Created At:</label>
-                            <span className="ml-2 text-xs">{selectedLead?.createdAt?.toLocaleString().split('T')[0]} {selectedLead?.createdAt?.toLocaleString().split('T')[1].split('.')[0]}</span>
+                        <div className="text-sm">
+                            <label className="block text-xs sm:text-sm font-medium">Created At:</label>
+                            <span className="text-xs sm:text-sm">{selectedLead?.createdAt?.toLocaleString().split('T')[0]} {selectedLead?.createdAt?.toLocaleString().split('T')[1].split('.')[0]}</span>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium">Updated At:</label>
-                            <span className="ml-2 text-xs">{selectedLead?.updatedAt?.toLocaleString().split('T')[0]} {selectedLead?.updatedAt?.toLocaleString().split('T')[1].split('.')[0]}</span>
+                        <div className="text-sm">
+                            <label className="block text-xs sm:text-sm font-medium">Updated At:</label>
+                            <span className="text-xs sm:text-sm">{selectedLead?.updatedAt?.toLocaleString().split('T')[0]} {selectedLead?.updatedAt?.toLocaleString().split('T')[1].split('.')[0]}</span>
                         </div>
                     </div>
                     <div className="space-y-4">
@@ -194,8 +194,8 @@ const ManageLead = () => {
                 </div>
 
                 {/* Client Details */}
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold mb-4 mt-8">Client Details</h2>
+                <div className="mb-4 sm:mb-6">
+                    <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8">Client Details</h2>
                     <div className="space-y-4">
                         {client && (
                             <>
@@ -299,15 +299,15 @@ const ManageLead = () => {
                 </div>
 
                 {/* Comments */}
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold mb-2">Comments</h2>
+                <div className="mb-4 sm:mb-6">
+                    <h2 className="text-base sm:text-lg font-semibold mb-2">Comments</h2>
                     <div className="space-y-4">
                         {selectedLead?.comments?.map((comment) => (
-                            <div key={comment._id} className="flex items-start space-x-2">
-                                <p className="flex-1">{comment.comment}</p>
+                            <div key={comment._id} className="flex items-start gap-2 sm:space-x-2">
+                                <p className="flex-1 text-sm sm:text-base break-words">{comment.comment}</p>
                                 <button
                                     // onClick={() => setEditingComment({ id: comment._id!, text: comment.comment! })}
-                                    className="text-indigo-600"
+                                    className="text-indigo-600 text-sm sm:text-base flex-shrink-0"
                                 >
                                     Edit
                                 </button>
@@ -345,7 +345,7 @@ const ManageLead = () => {
 
                 {/* Current Owner */}
                 <div>
-                    <h2 className="text-lg font-semibold mb-2">Current Owner</h2>
+                    <h2 className="text-base sm:text-lg font-semibold mb-2">Current Owner</h2>
                     <div className="space-y-4">
                         <p>Current Owner: {selectedLead?.currentOwner?.username || "N/A"}</p>
                         <input

@@ -110,28 +110,28 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                 </h1>
                 {!isCreatingClient ? (
                     <>
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-6">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4 sm:mb-6">
                             <input
                                 type="text"
                                 placeholder="Search client by phone"
                                 value={clientPhone}
                                 onChange={(e) => setClientPhone(e.target.value)}
-                                className="flex-1 px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <button
                                 onClick={handleSearchClient}
-                                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
+                                className="px-4 py-2 text-sm sm:text-base bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
                             >
                                 Search
                             </button>
                         </div>
                         {searchedClients.length > 0 && (
-                            <div className="max-h-40 overflow-y-auto bg-gray-200 dark:bg-gray-800 p-4 rounded-md shadow-md mb-6">
+                            <div className="max-h-40 overflow-y-auto bg-gray-200 dark:bg-gray-800 p-3 sm:p-4 rounded-md shadow-md mb-4 sm:mb-6">
                                 {searchedClients.map((client) => (
                                     <div
                                         key={client._id}
                                         onClick={() => setSelectedClient(client)}
-                                        className={`p-2 rounded-md cursor-pointer ${
+                                        className={`p-2 sm:p-3 rounded-md cursor-pointer text-sm sm:text-base ${
                                             selectedClient?._id === client._id
                                                 ? "bg-blue-500 text-white"
                                                 : "hover:bg-gray-300 dark:hover:bg-gray-700"
@@ -154,20 +154,20 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                                 setClientPhone("");
                                 setIsCreatingClient(true);
                             }}
-                            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md font-medium"
+                            className="w-full sm:w-auto px-4 py-2 text-sm sm:text-base bg-green-500 hover:bg-green-600 text-white rounded-md font-medium"
                         >
                             Create New Client
                         </button>
                     </>
                 ) : (
-                    <div className="space-y-4 mb-6">
+                    <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                         <input
                             name="fullName"
                             type="text"
                             placeholder="Full Name"
                             value={newClient?.fullName}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             name="phone"
@@ -175,7 +175,7 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                             placeholder="Phone"
                             value={newClient?.phone}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             name="email"
@@ -183,7 +183,7 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                             placeholder="Email"
                             value={newClient?.email}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             name="businessName"
@@ -191,7 +191,7 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                             placeholder="Business Name"
                             value={newClient?.businessName}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             name="deposit"
@@ -199,7 +199,7 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                             placeholder="Deposit"
                             value={newClient?.deposit}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             name="lookingFor"
@@ -207,7 +207,7 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                             placeholder="Looking For"
                             value={newClient?.lookingFor}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             name="creditScore"
@@ -215,7 +215,7 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                             placeholder="Credit Score"
                             value={newClient?.creditScore}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             name="esixtingLoan"
@@ -223,25 +223,27 @@ const AddLead = ({ selectedTeam, setSelectedItem }: AddLeadProps) => {
                             placeholder="Existing Loan"
                             value={newClient?.existingLoan}
                             onChange={setNewClientField}
-                            className="w-full px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-                        <button
-                            onClick={handleCreateClient}
-                            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md font-medium"
-                        >
-                            Save Client
-                        </button>
-                        <button
-                            onClick={() => setIsCreatingClient(false)}
-                            className="px-4 py-2 bg-gray-400 hover:bg-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-md font-medium"
-                        >
-                            Cancel
-                        </button>
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                            <button
+                                onClick={handleCreateClient}
+                                className="flex-1 px-4 py-2 text-sm sm:text-base bg-green-500 hover:bg-green-600 text-white rounded-md font-medium"
+                            >
+                                Save Client
+                            </button>
+                            <button
+                                onClick={() => setIsCreatingClient(false)}
+                                className="flex-1 px-4 py-2 text-sm sm:text-base bg-gray-400 hover:bg-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-md font-medium"
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 )}
                 <button
                     onClick={handleCreateLead}
-                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
+                    className="w-full sm:w-auto px-4 py-2 text-sm sm:text-base bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={!selectedClient}
                 >
                     Create Lead

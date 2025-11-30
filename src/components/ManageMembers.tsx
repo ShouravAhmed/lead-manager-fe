@@ -57,31 +57,32 @@ const ManageMembers = ({ selectedTeam, setSelectedTeam } : ManageMemberProps) =>
                 <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">
                     Manage Members
                 </h1>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-6">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4 sm:mb-6">
                     <input
                         type="email"
                         placeholder="Enter email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="flex-1 px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
                         onClick={handleAddMember}
-                        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
+                        className="px-4 py-2 text-sm sm:text-base bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
                     >
                         Add Member
                     </button>
                 </div>
-                <ul className="space-y-4">
+                <ul className="space-y-3 sm:space-y-4">
                     {selectedTeam?.members?.map((member) => (
                         <li
                             key={member._id}
-                            className="flex justify-between items-center bg-gray-200 dark:bg-gray-800 p-4 rounded-md shadow-md"
+                            className="flex justify-between items-center gap-2 bg-gray-200 dark:bg-gray-800 p-3 sm:p-4 rounded-md shadow-md"
                         >
-                            <span className="break-words">{member.username}</span>
+                            <span className="break-words text-sm sm:text-base flex-1">{member.username}</span>
                             <button
                                 onClick={() => member.email && handleDeleteMember(member.email)}
-                                className="text-red-500 hover:text-red-600"
+                                className="text-red-500 hover:text-red-600 flex-shrink-0"
+                                aria-label="Delete member"
                             >
                                 <FiX size={20} />
                             </button>

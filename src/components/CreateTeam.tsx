@@ -40,27 +40,27 @@ const CreateTeam = ({setSelectedTeam, setSelectedItem, setTeams, updateTeams} : 
                 <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">
                     Create Team
                 </h1>
-                <div className="flex flex-col gap-4 mb-6">
+                <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
                     <input
                         type="text"
                         placeholder="Enter team title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <textarea
                         placeholder="Enter team description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
                     />
                     {error && (
-                        <p className="text-red-500 text-sm">{error}</p>
+                        <p className="text-red-500 text-xs sm:text-sm">{error}</p>
                     )}
                     <button
                         onClick={handleCreateTeam}
-                        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
+                        className="px-4 py-2 text-sm sm:text-base bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
                     >
                         Create Team
                     </button>

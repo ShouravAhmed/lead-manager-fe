@@ -15,6 +15,7 @@ import Leads from "../components/Leads";
 import ManageLead from "../components/ManageLead";
 
 const Dashboard = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const [selectedTeam, setSelectedTeam] = useState<Team | null>(() => {
         const storedTeam = localStorage.getItem("selectedTeam");
@@ -74,6 +75,14 @@ const Dashboard = () => {
 
     return (
         <div className="flex min-h-screen h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+            {/* Mobile Overlay */}
+            {isSidebarOpen && (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Left Column */}
             <DashboardLeftColumn 
                 teams={teams} 
@@ -81,11 +90,47 @@ const Dashboard = () => {
                 selectedTeam={selectedTeam} 
                 setSelectedTeam={setSelectedTeam} 
                 selectedItem={selectedItem} 
-                setSelectedItem={setSelectedItem} 
+                setSelectedItem={(item) => {
+                    setSelectedItem(item);
+                    setIsSidebarOpen(false); // Close sidebar on mobile when item is selected
+                }}
+                isSidebarOpen={isSidebarOpen}
+                setIsSidebarOpen={setIsSidebarOpen}
             />
 
             {/* Right Column */}
-            <main className="flex-grow overflow-y-auto h-full">
+            <main className="flex-grow overflow-y-auto h-full w-full md:w-auto">
+                {/* Mobile Menu Button */}
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="fixed top-4 left-4 z-30 md:hidden p-2 bg-white dark:bg-gray-800 rounded-md shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                    aria-label="Toggle menu"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        {isSidebarOpen ? (
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        ) : (
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 6h16M4 12h16M4 18h16"
+                            />
+                        )}
+                    </svg>
+                </button>
+
                 {selectedItem?.name === "Manage Members" && <ManageMembers setSelectedTeam={setSelectedTeam}  selectedTeam={selectedTeam}/>}
                 {selectedItem?.name === "Create Team" && <CreateTeam  setSelectedTeam={setSelectedTeam} setSelectedItem={setSelectedItem} setTeams={setTeams} updateTeams={updateTeams} />}
                 {selectedItem?.name === "Leads" && <Leads setSelectedItem={setSelectedItem} currentUser={userData} selectedTeam={selectedTeam} />}
